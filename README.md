@@ -1,55 +1,145 @@
-# Next.js & HeroUI Template
+# Alcance Sol PWA
 
-This is a template for creating applications using Next.js 14 (pages directory) and HeroUI (v2).
+Um Progressive Web App (PWA) para reportar problemas de conectividade e sinal, com funcionamento offline e integração com WhatsApp.
 
-[Try it on CodeSandbox](https://githubbox.com/heroui-inc/next-pages-template)
+## ✨ Funcionalidades
 
-> Note: Since Next.js 14, the pages router is recommend migrating to the [new App Router](https://nextjs.org/docs/app) to leverage React's latest features
->
-> Read more: [Pages Router](https://nextjs.org/docs/pages)
+- 📱 **PWA Instalável** - Instale como app no celular
+- 🔒 **Login Simulado** - Autenticação mock local
+- 🗺️ **Mapa com Antenas** - Visualize cobertura de sinal
+- 📝 **Reportar Problemas** - Formulário integrado com WhatsApp
+- 📋 **Histórico** - Mensagens salvas localmente
+- 📴 **Funciona Offline** - Navegação e salvamento sem internet
 
-## Technologies Used
+## 🚀 Como Rodar
 
-- [Next.js 14](https://nextjs.org/docs/getting-started)
-- [HeroUI](https://heroui.com)
-- [Tailwind CSS](https://tailwindcss.com)
-- [Tailwind Variants](https://tailwind-variants.org)
-- [TypeScript](https://www.typescriptlang.org)
-- [Framer Motion](https://www.framer.com/motion)
-- [next-themes](https://github.com/pacocoursey/next-themes)
+### Pré-requisitos
+- Node.js 18+
+- npm ou yarn
 
-## How to Use
-
-To create a new project based on this template using `create-next-app`, run the following command:
+### Instalação
 
 ```bash
-npx create-next-app -e https://github.com/heroui-inc/next-pages-template
-```
-
-### Install dependencies
-
-You can use one of them `npm`, `yarn`, `pnpm`, `bun`, Example using `npm`:
-
-```bash
+# Instalar dependências
 npm install
+
+# Copiar variáveis de ambiente
+cp .env.example .env.local
+
+# Editar .env.local com suas chaves
 ```
 
-### Run the development server
+### Desenvolvimento
 
 ```bash
 npm run dev
 ```
 
-### Setup pnpm (optional)
+Acesse [http://localhost:3000](http://localhost:3000)
 
-If you are using `pnpm`, you need to add the following code to your `.npmrc` file:
+### Produção (para testar PWA)
 
 ```bash
-public-hoist-pattern[]=*@heroui/*
+npm run build
+npm run start
 ```
 
-After modifying the `.npmrc` file, you need to run `pnpm install` again to ensure that the dependencies are installed correctly.
+> ⚠️ **PWA requer HTTPS** - Em produção, use HTTPS para o service worker funcionar.
 
-## License
+## ⚙️ Variáveis de Ambiente
 
-Licensed under the [MIT license](https://github.com/heroui-inc/next-pages-template/blob/main/LICENSE).
+Crie um arquivo `.env.local` na raiz:
+
+```env
+# Google Maps API Key
+NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=sua_api_key_aqui
+
+# Número do WhatsApp (com código do país)
+NEXT_PUBLIC_SUPPORT_WA_NUMBER=5562999991234
+```
+
+### Obtendo a API Key do Google Maps
+
+1. Acesse [Google Cloud Console](https://console.cloud.google.com/)
+2. Crie um projeto ou selecione existente
+3. Ative "Maps JavaScript API"
+4. Crie uma credencial (API Key)
+5. Restrinja a chave por HTTP referrer (recomendado)
+
+## 📱 Testando PWA
+
+1. Faça build de produção: `npm run build && npm start`
+2. Acesse via HTTPS ou localhost
+3. No Chrome DevTools > Application > Service Workers
+4. Verifique se o SW está registrado
+5. Teste offline:
+   - Vá em Network > marque "Offline"
+   - Navegue pelas telas
+   - Crie mensagens e verifique histórico
+
+## 🌐 Deploy (Vercel)
+
+```bash
+# Via CLI
+npm i -g vercel
+vercel
+
+# Ou conecte o repositório no Vercel Dashboard
+```
+
+Configure as variáveis de ambiente no Vercel Dashboard.
+
+## ⚠️ Limitações
+
+### Google Maps Offline
+O Google Maps **não funciona offline** - os tiles do mapa requerem conexão. Quando offline:
+- Um placeholder informativo é exibido
+- Todas as outras funcionalidades continuam funcionando
+- Você pode reportar problemas e ver histórico normalmente
+
+### Armazenamento Local
+- Dados são salvos no IndexedDB do navegador
+- Limpar dados do navegador remove as mensagens
+- Não há sincronização entre dispositivos
+
+## 🛠️ Stack Tecnológica
+
+- **Next.js 15** - App Router
+- **TypeScript** - Tipagem estática
+- **Hero UI** - Componentes de UI
+- **Tailwind CSS** - Estilização
+- **IndexedDB (idb)** - Armazenamento local
+- **Lucide React** - Ícones
+- **Google Maps** - Mapas
+
+## 📁 Estrutura do Projeto
+
+```
+alcance-sol/
+├── app/
+│   ├── (protected)/      # Rotas protegidas
+│   │   ├── home/         # Mapa e antenas
+│   │   ├── report/       # Formulário de report
+│   │   ├── history/      # Histórico de mensagens
+│   │   ├── contact/      # Contato
+│   │   └── layout.tsx    # Layout com sidebar
+│   ├── login/            # Página de login
+│   ├── layout.tsx        # Root layout
+│   └── page.tsx          # Redirect inicial
+├── components/
+│   ├── MapComponent.tsx  # Google Maps
+│   └── Sidebar.tsx       # Menu lateral
+├── lib/
+│   ├── AuthContext.tsx   # Contexto de autenticação
+│   ├── storage.ts        # IndexedDB helpers
+│   └── types.ts          # TypeScript types
+├── public/
+│   ├── icons/            # Ícones PWA
+│   ├── manifest.json     # PWA manifest
+│   └── sw.js             # Service Worker
+└── ...
+```
+
+## 📄 Licença
+
+MIT
